@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Learning Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .subject-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .subject-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .subject-title {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subject-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .topic-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .topic-list li {
+            padding: 8px 0;
+            color: #555;
+            border-bottom: 1px solid #eee;
+        }
+
+        .topic-list li:last-child {
+            border-bottom: none;
+        }
+
+        .topic-list li:before {
+            content: "▸ ";
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 40px;
+            border-radius: 15px;
+            position: relative;
+            animation: slideDown 0.4s ease;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2em;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .lesson-content {
+            margin-top: 20px;
+        }
+
+        .lesson-content h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .lesson-content p {
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .subjects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 School Learning Hub</h1>
+            <p class="tagline">Explore, Learn, and Grow with Interactive Lessons</p>
+        </header>
+
+        <div class="subjects-grid">
+            <div class="subject-card" onclick="openSubject('math')">
+                <div class="subject-icon">📐</div>
+                <h2 class="subject-title">Mathematics</h2>
+                <p class="subject-description">Master numbers, equations, and problem-solving skills</p>
+                <ul class="topic-list">
+                    <li>Algebra & Equations</li>
+                    <li>Geometry & Shapes</li>
+                    <li>Statistics & Data</li>
+                    <li>Calculus Basics</li>
+                </ul>
+                <button class="start-btn">Start Learning</button>
+            </div>
+
+            <div class="subject-card" onclick="openSubject('ela')">
+                <div class="subject-icon">📚</div>
+                <h2 class="subject-title">English Language Arts</h2>
+                <p class="subject-description">Enhance reading, writing, and communication skills</p>
+                <ul class="topic-list">
+                    <li>Reading Comprehension</li>
+                    <li>Creative Writing</li>
+                    <li>Grammar & Vocabulary</li>
+                    <li>Literature Analysis</li>
+                </ul>
+                <button class="start-btn">Start Learning</button>
+            </div>
+
+            <div class="subject-card" onclick="openSubject('history')">
+                <div class="subject-icon">🏛️</div>
+                <h2 class="subject-title">History</h2>
+                <p class="subject-description">Journey through time and discover our past</p>
+                <ul class="topic-list">
+                    <li>Ancient Civilizations</li>
+                    <li>World Wars & Conflicts</li>
+                    <li>American History</li>
+                    <li>Modern Era Events</li>
+                </ul>
+                <button class="start-btn">Start Learning</button>
+            </div>
+
+            <div class="subject-card" onclick="openSubject('health')">
+                <div class="subject-icon">💪</div>
+                <h2 class="subject-title">Health</h2>
+                <p class="subject-description">Learn about wellness, nutrition, and healthy living</p>
+                <ul class="topic-list">
+                    <li>Nutrition & Diet</li>
+                    <li>Physical Fitness</li>
+                    <li>Mental Health</li>
+                    <li>Body Systems</li>
+                </ul>
+                <button class="start-btn">Start Learning</button>
+            </div>
+
+            <div class="subject-card" onclick="openSubject('engineering')">
+                <div class="subject-icon">⚙️</div>
+                <h2 class="subject-title">Engineering</h2>
+                <p class="subject-description">Design, build, and innovate with STEM principles</p>
+                <ul class="topic-list">
+                    <li>Design Thinking</li>
+                    <li>Robotics & Coding</li>
+                    <li>Structures & Materials</li>
+                    <li>Problem Solving</li>
+                </ul>
+                <button class="start-btn">Start Learning</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        let selectedSubject = '';
+
+        function openSubject(subject) {
+            selectedSubject = subject;
+            const modal = document.getElementById('modal');
+            const modalBody = document.getElementById('modalBody');
+            
+            const subjectTitles = {
+                math: 'Mathematics',
+                ela: 'English Language Arts',
+                history: 'History',
+                health: 'Health',
+                engineering: 'Engineering'
+            };
+
+            const subjectIcons = {
+                math: '📐',
+                ela: '📚',
+                history: '🏛️',
+                health: '💪',
+                engineering: '⚙️'
+            };
+            
+            modalBody.innerHTML = `
+                <div style="text-align: center; font-size: 3em; margin-bottom: 20px;">
+                    ${subjectIcons[subject]}
+                </div>
+                <h2 style="color: #667eea; text-align: center; margin-bottom: 20px;">
+                    ${subjectTitles[subject]}
+                </h2>
+                <h3 style="text-align: center; margin-bottom: 30px;">Select Your Grade Level</h3>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+                    <button onclick="selectGrade(5)" class="grade-btn" style="padding: 20px; font-size: 1.2em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; transition: transform 0.2s;">
+                        5th Grade
+                    </button>
+                    <button onclick="selectGrade(6)" class="grade-btn" style="padding: 20px; font-size: 1.2em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; transition: transform 0.2s;">
+                        6th Grade
+                    </button>
+                    <button onclick="selectGrade(7)" class="grade-btn" style="padding: 20px; font-size: 1.2em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; transition: transform 0.2s;">
+                        7th Grade
+                    </button>
+                    <button onclick="selectGrade(8)" class="grade-btn" style="padding: 20px; font-size: 1.2em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; cursor: pointer; transition: transform 0.2s;">
+                        8th Grade
+                    </button>
+                </div>
+            `;
+            
+            modal.style.display = 'block';
+
+            setTimeout(() => {
+                document.querySelectorAll('.grade-btn').forEach(btn => {
+                    btn.addEventListener('mouseenter', function() {
+                        this.style.transform = 'scale(1.05)';
+                    });
+                    btn.addEventListener('mouseleave', function() {
+                        this.style.transform = 'scale(1)';
+                    });
+                });
+            }, 100);
+        }
+
+        let currentSubjectData = {};
+        let currentGrade = 0;
+
+        function selectGrade(grade) {
+            currentGrade = grade;
+            const modalBody = document.getElementById('modalBody');
+            
+            const lessonContent = {
+                math: {
+                    5: {
+                        title: '5th Grade Math: Fractions & Decimals',
+                        content: 'Learn to add, subtract, multiply, and divide fractions and decimals. Master converting between fractions, decimals, and percentages.',
+                        example: 'Example: 3/4 + 1/2 = 3/4 + 2/4 = 5/4 = 1 1/4'
+                    },
+                    6: {
+                        title: '6th Grade Math: Ratios & Proportions',
+                        content: 'Understand ratios, rates, and proportions. Learn to solve real-world problems using these concepts.',
+                        example: 'Example: If 3 apples cost $2, how much do 9 apples cost? Set up: 3/2 = 9/x, so x = $6'
+                    },
+                    7: {
+                        title: '7th Grade Math: Algebraic Expressions',
+                        content: 'Work with variables, solve equations, and understand proportional relationships.',
+                        example: 'Example: Solve 2x + 5 = 13. Subtract 5: 2x = 8. Divide by 2: x = 4'
+                    },
+                    8: {
+                        title: '8th Grade Math: Linear Equations',
+                        content: 'Graph linear equations, understand slope, and solve systems of equations.',
+                        example: 'Example: The equation y = 2x + 3 has a slope of 2 and y-intercept of 3'
+                    }
+                },
+                ela: {
+                    5: {
+                        title: '5th Grade ELA: Literary Analysis',
+                        content: 'Compare themes and topics across multiple texts. Identify point of view and analyze character development.',
+                        example: 'Practice identifying the theme by asking: What lesson does the character learn?'
+                    },
+                    6: {
+                        title: '6th Grade ELA: Argumentative Writing',
+                        content: 'Write arguments to support claims with clear reasons and relevant evidence.',
+                        example: 'Structure: Claim → Reasons → Evidence → Counterclaim → Conclusion'
+                    },
+                    7: {
+                        title: '7th Grade ELA: Research & Analysis',
+                        content: 'Conduct research projects, analyze complex texts, and cite sources properly.',
+                        example: 'Use MLA format for citations and create annotated bibliographies'
+                    },
+                    8: {
+                        title: '8th Grade ELA: Rhetoric & Persuasion',
+                        content: 'Analyze rhetorical strategies and write sophisticated arguments with counterarguments.',
+                        example: 'Identify ethos (credibility), pathos (emotion), and logos (logic) in texts'
+                    }
+                },
+                history: {
+                    5: {
+                        title: '5th Grade History: Early American History',
+                        content: 'Explore Native American cultures, European exploration, and the founding of the colonies.',
+                        example: 'Learn about the 13 original colonies and their different economies and cultures'
+                    },
+                    6: {
+                        title: '6th Grade History: Ancient Civilizations',
+                        content: 'Study ancient Rome, Greece, Egypt, China, and their lasting contributions.',
+                        example: 'Compare democratic systems: Athens vs. modern democracies'
+                    },
+                    7: {
+                        title: '7th Grade History: Medieval to Renaissance',
+                        content: 'Explore feudalism, the Crusades, the Renaissance, and the Age of Exploration.',
+                        example: 'Analyze how the printing press changed European society'
+                    },
+                    8: {
+                        title: '8th Grade History: American History',
+                        content: 'Study the Revolutionary War, Constitution, Civil War, and industrialization.',
+                        example: 'Examine the causes and effects of the Civil War and Reconstruction'
+                    }
+                },
+                health: {
+                    5: {
+                        title: '5th Grade Health: Body Systems',
+                        content: 'Learn about major body systems and how they work together to keep you healthy.',
+                        example: 'The circulatory system delivers oxygen and nutrients to all body cells'
+                    },
+                    6: {
+                        title: '6th Grade Health: Nutrition & Fitness',
+                        content: 'Understand balanced diets, food groups, and the importance of physical activity.',
+                        example: 'MyPlate guidelines: Fill half your plate with fruits and vegetables'
+                    },
+                    7: {
+                        title: '7th Grade Health: Mental & Emotional Health',
+                        content: 'Develop coping strategies, understand stress management, and build resilience.',
+                        example: 'Practice mindfulness and identify healthy ways to manage emotions'
+                    },
+                    8: {
+                        title: '8th Grade Health: Health Decisions',
+                        content: 'Learn about making informed health choices and understanding risk behaviors.',
+                        example: 'Analyze how peer pressure affects decision-making and practice refusal skills'
+                    }
+                },
+                engineering: {
+                    5: {
+                        title: '5th Grade Engineering: Simple Machines',
+                        content: 'Explore levers, pulleys, wheels, and how they make work easier.',
+                        example: 'Build a simple catapult using a lever and fulcrum to launch objects'
+                    },
+                    6: {
+                        title: '6th Grade Engineering: Structures & Forces',
+                        content: 'Design stable structures and understand forces like tension and compression.',
+                        example: 'Create a tower using limited materials that can withstand weight'
+                    },
+                    7: {
+                        title: '7th Grade Engineering: Robotics Basics',
+                        content: 'Introduction to programming, sensors, and building automated systems.',
+                        example: 'Program a robot to navigate a maze using sensors and logic'
+                    },
+                    8: {
+                        title: '8th Grade Engineering: Design Thinking',
+                        content: 'Apply the engineering design process to solve complex, real-world problems.',
+                        example: 'Design a sustainable solution for a community problem through iteration'
+                    }
+                }
+            };
+
+            const lesson = lessonContent[selectedSubject][grade];
+            currentSubjectData = lesson;
+            
+            modalBody.innerHTML = `
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px 30px; border-radius: 25px; font-size: 1.1em; margin-bottom: 20px;">
+                        Grade ${grade}
+                    </div>
+                </div>
+                <h2 style="color: #667eea; text-align: center; margin-bottom: 25px;">
+                    ${lesson.title}
+                </h2>
+                <div class="lesson-content">
+                    <h3>Course Overview</h3>
+                    <p>${lesson.content}</p>
+                    <h3 style="margin-top: 25px;">Learning Example</h3>
+                    <p style="background: #f0f0f0; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
+                        ${lesson.example}
+                    </p>
+                    <button onclick="startCourse()" style="width: 100%; margin-top: 25px; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 1.1em; cursor: pointer; transition: transform 0.2s;">
+                        Start This Course
+                    </button>
+                </div>
+            `;
+        }
+
+        function startCourse() {
+            showLearningModule();
+        }
+
+        function showLearningModule() {
+            const modalBody = document.getElementById('modalBody');
+            
+            const questions = {
+                math: {
+                    5: {q: "What is 3/4 + 1/4?", answers: ["1/2", "4/8", "1", "2/4"], correct: 2},
+                    6: {q: "If 5 pencils cost $3, how much do 10 pencils cost?", answers: ["$5", "$6", "$7", "$8"], correct: 1},
+                    7: {q: "Solve for x: 3x + 6 = 15", answers: ["x = 2", "x = 3", "x = 4", "x = 5"], correct: 1},
+                    8: {q: "What is the slope of y = 4x - 2?", answers: ["4", "-2", "2", "-4"], correct: 0}
+                },
+                ela: {
+                    5: {q: "What is the main purpose of a topic sentence?", answers: ["To end the paragraph", "To introduce the main idea", "To add details", "To confuse readers"], correct: 1},
+                    6: {q: "Which is an example of a counterclaim?", answers: ["I agree completely", "However, some argue...", "In conclusion", "For example"], correct: 1},
+                    7: {q: "What does MLA stand for?", answers: ["Modern Language Association", "My Learning Academy", "Multiple Learning Arts", "Major Literature Analysis"], correct: 0},
+                    8: {q: "Ethos appeals to:", answers: ["Emotion", "Logic", "Credibility", "Humor"], correct: 2}
+                },
+                history: {
+                    5: {q: "How many original colonies were there?", answers: ["10", "13", "15", "20"], correct: 1},
+                    6: {q: "Which civilization built the Colosseum?", answers: ["Greece", "Egypt", "Rome", "Persia"], correct: 2},
+                    7: {q: "The Renaissance began in which country?", answers: ["France", "Spain", "Italy", "England"], correct: 2},
+                    8: {q: "When was the U.S. Constitution ratified?", answers: ["1776", "1781", "1787", "1788"], correct: 3}
+                },
+                health: {
+                    5: {q: "Which system pumps blood through your body?", answers: ["Respiratory", "Digestive", "Circulatory", "Nervous"], correct: 2},
+                    6: {q: "Which food group should fill half your plate?", answers: ["Grains", "Protein", "Fruits & Vegetables", "Dairy"], correct: 2},
+                    7: {q: "What is a healthy way to manage stress?", answers: ["Avoid all problems", "Practice deep breathing", "Skip meals", "Isolate yourself"], correct: 1},
+                    8: {q: "Peer pressure can be:", answers: ["Only negative", "Only positive", "Both positive and negative", "Neither"], correct: 2}
+                },
+                engineering: {
+                    5: {q: "Which simple machine helps lift heavy objects?", answers: ["Wheel", "Pulley", "Screw", "Wedge"], correct: 1},
+                    6: {q: "What force pulls structures downward?", answers: ["Tension", "Compression", "Gravity", "Friction"], correct: 2},
+                    7: {q: "What do robots use to detect their environment?", answers: ["Sensors", "Motors", "Batteries", "Wheels"], correct: 0},
+                    8: {q: "What is the first step in the design process?", answers: ["Build", "Test", "Ask/Define Problem", "Improve"], correct: 2}
+                }
+            };
+
+            const question = questions[selectedSubject][currentGrade];
+            
+            modalBody.innerHTML = `
+                <div style="text-align: center;">
+                    <h2 style="color: #667eea; margin-bottom: 30px;">📝 Quick Knowledge Check</h2>
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 25px; text-align: left;">
+                        <p style="font-size: 1.2em; font-weight: bold; color: #333; margin-bottom: 20px;">${question.q}</p>
+                        <div id="answerOptions">
+                            ${question.answers.map((answer, index) => `
+                                <button onclick="checkAnswer(${index}, ${question.correct})" 
+                                    style="display: block; width: 100%; padding: 15px; margin: 10px 0; background: white; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; text-align: left; font-size: 1em; transition: all 0.2s;"
+                                    onmouseover="this.style.borderColor='#667eea'; this.style.background='#f0f4ff';"
+                                    onmouseout="this.style.borderColor='#ddd'; this.style.background='white';">
+                                    ${String.fromCharCode(65 + index)}. ${answer}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div id="feedback" style="min-height: 60px; margin-bottom: 20px;"></div>
+                    <button onclick="showLessonContent()" style="padding: 15px 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 1.1em; cursor: pointer; transition: transform 0.2s;">
+                        Continue to Lesson
+                    </button>
+                </div>
+            `;
+        }
+
+        function checkAnswer(selected, correct) {
+            const feedback = document.getElementById('feedback');
+            const buttons = document.querySelectorAll('#answerOptions button');
+            
+            buttons.forEach(btn => btn.disabled = true);
+            
+            if (selected === correct) {
+                buttons[selected].style.background = '#4ade80';
+                buttons[selected].style.borderColor = '#22c55e';
+                buttons[selected].style.color = 'white';
+                feedback.innerHTML = `
+                    <div style="background: #4ade80; color: white; padding: 15px; border-radius: 8px; font-size: 1.1em;">
+                        ✅ Correct! Great job!
+                    </div>
+                `;
+            } else {
+                buttons[selected].style.background = '#ef4444';
+                buttons[selected].style.borderColor = '#dc2626';
+                buttons[selected].style.color = 'white';
+                buttons[correct].style.background = '#4ade80';
+                buttons[correct].style.borderColor = '#22c55e';
+                buttons[correct].style.color = 'white';
+                feedback.innerHTML = `
+                    <div style="background: #ef4444; color: white; padding: 15px; border-radius: 8px; font-size: 1.1em;">
+                        ❌ Not quite. The correct answer is highlighted in green.
+                    </div>
+                `;
+            }
+        }
+
+        function showLessonContent() {
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = `
+                <div>
+                    <h2 style="color: #667eea; text-align: center; margin-bottom: 25px;">
+                        ${currentSubjectData.title}
+                    </h2>
+                    <div class="lesson-content">
+                        <h3>Course Overview</h3>
+                        <p>${currentSubjectData.content}</p>
+                        <h3 style="margin-top: 25px;">Learning Example</h3>
+                        <p style="background: #f0f0f0; padding: 15px; border-radius: 8px; border-left: 4px solid #667eea;">
+                            ${currentSubjectData.example}
+                        </p>
+                        <div style="background: #e0f2fe; padding: 20px; border-radius: 8px; margin-top: 25px; border-left: 4px solid #0284c7;">
+                            <h3 style="color: #0284c7; margin-bottom: 10px;">💬 Ask Me Anything!</h3>
+                            <p style="margin-bottom: 15px;">Have a question about this topic? Type it below!</p>
+                            <input type="text" id="questionInput" placeholder="Type your question here..." 
+                                style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 1em; margin-bottom: 10px;">
+                            <button onclick="answerQuestion()" style="width: 100%; padding: 12px; background: #0284c7; color: white; border: none; border-radius: 8px; font-size: 1em; cursor: pointer;">
+                                Get Answer
+                            </button>
+                            <div id="answerBox" style="margin-top: 15px;"></div>
+                        </div>
+                        <button onclick="closeModal()" style="width: 100%; margin-top: 25px; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 1.1em; cursor: pointer;">
+                            Back to Home
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function answerQuestion() {
+            const question = document.getElementById('questionInput').value;
+            const answerBox = document.getElementById('answerBox');
+            
+            if (!question.trim()) {
+                answerBox.innerHTML = `
+                    <div style="background: #fee2e2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444;">
+                        <p style="color: #991b1b;">Please type a question first!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const subjectAnswers = {
+                math: "Great math question! Remember to break down problems step by step. Start by identifying what you know and what you need to find. Use formulas and check your work!",
+                ela: "Excellent ELA question! When analyzing texts, look for themes, character development, and the author's purpose. Always support your ideas with evidence from the text.",
+                history: "Interesting history question! Remember that historical events are often connected. Look at causes, effects, and how different groups were impacted by events.",
+                health: "Good health question! Remember that wellness includes physical, mental, and social health. Making healthy choices today helps you feel better now and in the future.",
+                engineering: "Awesome engineering question! Engineers solve problems by testing ideas and learning from failures. Always think about how you can improve your designs!"
+            };
+
+            answerBox.innerHTML = `
+                <div style="background: #dcfce7; padding: 15px; border-radius: 8px; border-left: 4px solid #22c55e;">
+                    <p style="color: #166534; font-weight: bold; margin-bottom: 8px;">Your Question:</p>
+                    <p style="color: #166534; margin-bottom: 15px; font-style: italic;">"${question}"</p>
+                    <p style="color: #166534; font-weight: bold; margin-bottom: 8px;">Answer:</p>
+                    <p style="color: #166534;">${subjectAnswers[selectedSubject]}</p>
+                </div>
+            `;
+            
+            document.getElementById('questionInput').value = '';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
